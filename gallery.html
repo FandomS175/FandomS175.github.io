@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Галерея</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Infant:ital,wght@0,300..700;1,300..700&display=swap" rel="stylesheet">
+	<style>
+		/* объявляем переменные для основных цветов*/
+		:root {
+			--primary:#4361ee;
+			--secondary:#3f37c9;
+			--accent:#f72585;
+			--light:#f8f9fa;
+			--dark:#212529;
+			--card-bg:rgba(255,255,255, 0.90);
+		}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		body {
+			color: var(--dark);
+			padding: 20px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			
+			font-family: "Cormorant Infant", serif;
+			min-height: 100vh;
+			background: linear-gradient(135deg, #7209b7, #3a0ca3);
+			background-size: 400% 400%;
+			animation: gradientBG 15s ease infinite;
+		}
+		@keyframes gradientBG {
+			0% {background-position: 0% 50%; }
+			50% {background-position: 0% 50%; }
+			100% {background-position: 0% 50%; }
+		}
+		.container {
+			width: 100%;
+			max-width: 1200px;
+		}
+		.card {
+			background: var(--card-bg);
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+			transition: transform 0.5s ease;
+			padding: 30px;
+		}
+		.card:hover {
+			transform: translateY(-10px) rotateX(5deg);
+		}
+        header {
+        	text-align: center;
+        	margin-bottom: 30px;
+        	position: relative;
+        }
+        .avatar-container {
+        width: 250px;
+        height: 250px;
+        margin: 0 auto;
+        }
+        .avatar {
+        	width: 100%;
+        	height: 100%;
+        	object-fit: cover;
+        	border-radius: 50%;
+        	border: 5px solid var(--primary);
+        	box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        }
+        h1 {
+        	color: var(--primary);
+        	font-size: 3.5rem;
+        	margin-bottom: 10px;
+        	text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        .tagline {
+        	font-size: 1.2rem;
+        	color: var(--dark);
+        	max-width: 600px;
+        	margin: 0 auto;
+        }
+        .gallery-section {
+        	margin: 40px 0;
+        }
+        .section-title {
+        	text-align: center;
+        	margin-bottom: 30px;
+        	display: flex;
+        	align-items: center;
+        	justify-content: center;
+        }
+        .section-title h2 {
+        	color: var(--secondary);
+        	font-size: 2rem;
+        	border-bottom: 3px solid var(--accent);
+        	padding-bottom: 10px;
+        }
+        .gallery-item {
+        	position: relative;
+        	border-radius: 15px;
+        	overflow: hidden;
+        	aspect-ratio: 4/3;
+        	box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        	flex: 1 1 250px;
+        	max-width: 350px;
+        	transition: all 0.5s ease;
+        }
+        .gallery-item:hover {
+        	transform: translateY(-10px) scale(1.05);
+        	z-index: 2;
+        	box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+        	transition: all 0.5s ease;
+		}  
+		.gallery-img {
+			width: 100%;
+			height: 100%;
+			object-fit: coverS;
+			transition: all 0.5s ease;
+		}
+		.gallery-item:hover .gallery-img {
+			transform: scale(1.1);
+			filter: brightness(0.7);
+		}
+		.gallery-caption {
+			position: absolute;
+			bottom: -32px;
+			text-align: center;
+			left: 0;
+			right: 0;
+			background: rgba(255, 255, 255, 0.9);
+			padding: 15px;
+			transition: all 0.5s ease;
+		}
+		.gallery-item:hover .gallery-caption {
+			bottom: 0;
+		}
+		.gallery-flex {
+			display: flex;
+			flex-wrap: wrap;
+			justify-content: center;
+			gap: 20px;
+		}
+		.lightbox {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0,0.9);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			z-index: 100;
+			opacity: 0;
+			pointer-events: none;
+		}
+		.lightbox:target {
+			opacity: 1;
+			pointer-events: all;
+		}
+		.lightbox-content {
+			position: relative;
+			max-width: 90%;
+			max-height: 90%;
+		}
+		.lightbox-close {
+			position: absolute;
+			top: -40px;
+			right: -20px;
+			color: white;
+			font-size: 2rem;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+		.lightbox-close:hover {
+			color: var(--accent);
+			transform: rotate(90deg);
+		}
+		.lightbox-img {
+			max-width: 100%;
+			max-height: 80vh;
+			border: 5px solid white;
+			border-radius: 10px;
+			box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="card floating">
+			<header>
+				<div class="avatar-container">
+					<img src="картинка ).jpg" alt="" class="avatar">
+				</div>
+				<h1>Fandom</h1>
+				<p class="tagline">Начинающий разработчик сайтов :)</p>
+			</header>
+			<div class="gallery-section">
+				<div class="section-title">
+					<h2>Моя первая галлерея</h2>
+				</div>
+				<div class="gallery-flex">
+				<div class="gallery-item">
+					<a href="#img1"><img src="img/1.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Смешно</h3>
+						<p>Хаха</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img2"><img src="img/2.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Собака в очках</h3>
+						<p>Видимо солнце светит сильно</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img3"><img src="img/3.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Милый котик</h3>
+						<p>Крутой?</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img4"><img src="img/4.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Просто обезьяна</h3>
+						<p>Отсылка на терминатора</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img5"><img src="img/5.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Ржачная собака</h3>
+						<p>Морда смешная. Жаль сейчас утонет</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img6"><img src="img/6.jpg" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>А это обезьяна</h3>
+						<p>Тут даже говорить нечего</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img7"><img src="img/7.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Просто две обезьяны подряд</h3>
+						<p>Что в этом такого? Они же классные</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img8"><img src="img/8.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Родственник той собаки</h3>
+						<p>Которая с ржачной мордой</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img9"><img src="img/9.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Кот учённый</h3>
+						<p>Кот в очках.Кот Баю́н (кот баю́н, кот баха́рь) — персонаж славянских волшебных сказок, обладающий волшебным голосом.
+
+Он заговаривает и усыпляет своими разговорами и пением подошедших путников и тех из них, у кого недостаточно сил противостоять его волшебству и кто не подготовился к бою с ним, кот-колдун убивает железными когтями[1]. Но тот, кто сможет поймать кота, найдёт спасение от всех болезней и недугов, так как сказки Кота Баюна целебны. </p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img10"><img src="img/10.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Котик вот вот упадёт!</h3>
+						<p>Если хотите спасти его то поствьте лайк и подпишитесь на НАНАНА ДОРОГИ!</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img11"><img src="img/11.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Кот</h3>
+						<p>По-моему он чего-то испугался</p>
+					</div>
+				</div>
+				<div class="gallery-item">
+					<a href="#img12"><img src="img/12.webp" alt="" class="gallery-img"></a>
+					<div class="gallery-caption">
+						<h3>Я</h3>
+						<p>Просто я	</p>
+					</div>
+				</div>
+				</div>
+			</div>
+		</div>
+		<!-- Лайтбокс -->
+		<div class="lightbox" id="img1">
+			<div class="lightbox-content"><img src="img/1.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img2">
+			<div class="lightbox-content"><img src="img/2.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img3">
+			<div class="lightbox-content"><img src="img/3.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;
+		<div class="lightbox" id="img9">
+			<div class="lightbox-content"><img src="img/9.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img10">
+			<div class="lightbox-content"><img src="img/10.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img11">
+			<div class="lightbox-content"><img src="img/11.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img12">
+			<div class="lightbox-content"><img src="img/12.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div></a></div>
+		</div>
+		<div class="lightbox" id="img4">
+			<div class="lightbox-content"><img src="img/4.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img5">
+			<div class="lightbox-content"><img src="img/5.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img6">
+			<div class="lightbox-content"><img src="img/6.jpg" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img7">
+			<div class="lightbox-content"><img src="img/7.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		<div class="lightbox" id="img8">
+			<div class="lightbox-content"><img src="img/8.webp" alt="" class="lightbox-img"><a href="#" class="lightbox-close">&times;</a></div>
+		</div>
+		</div>
+	</div>
+</body>
+</html>
